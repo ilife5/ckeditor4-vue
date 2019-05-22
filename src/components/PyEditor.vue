@@ -164,15 +164,25 @@
                         xhr = fileLoader.xhr;
 
                     xhr.open( 'POST', fileLoader.uploadUrl, true );
-                    formData.append( self.uploaderConfig.key, fileLoader.file, fileLoader.fileName );
+                    if(self.uploaderConfig.format === 'base64') {
+                        var reader = new FileReader();
+                        reader.onload = function () {
+                            formData.append( self.uploaderConfig.key, this.result );
+
+                            fileLoader.xhr.send( formData );
+                        };
+                        reader.readAsDataURL(fileLoader.file);
+                    } else {
+                        formData.append( self.uploaderConfig.key, fileLoader.file, fileLoader.fileName );
+
+                        fileLoader.xhr.send( formData );
+                    }
                     const params = self.uploaderConfig.params;
                     if(params && typeof params === "object") {
                         for(let name in params) {
                             formData.append( name, params[name] );
                         }
                     }
-                    fileLoader.xhr.send( formData );
-
                     evt.stop();
                 }, null, null, 4 );
             }
