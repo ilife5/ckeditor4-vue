@@ -8,8 +8,6 @@
     import loadScript from 'load-script';
     import { debounce } from 'lodash-es';
     import $ from 'jquery';
-    import parseRTF from 'rtf-parser';
-    import {fromString} from '@iarna/rtf-to-html';
 
     window.$ = window.jQuery = $;
 
