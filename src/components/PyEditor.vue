@@ -1,6 +1,6 @@
 <template>
     <div :class="`${type==='inline'?'editor-wrapper':''}`">
-        <textarea ref="editor"></textarea>
+        <textarea ref="editor" style="height: 100px;"></textarea>
     </div>
 </template>
 
@@ -8,6 +8,8 @@
     import loadScript from 'load-script';
     import { debounce } from 'lodash-es';
     import $ from 'jquery';
+    import parseRTF from 'rtf-parser';
+    import {fromString} from '@iarna/rtf-to-html';
 
     window.$ = window.jQuery = $;
 
@@ -63,9 +65,12 @@
         ],
 
         removeButtons: 'Source,Save,NewPage,Preview,Print,Templates,Cut,Copy,Paste,PasteText,PasteFromWord,Undo,Redo,Find,Replace,SelectAll,Form,Checkbox,Radio,TextField,Textarea,Select,Button,ImageButton,HiddenField,CopyFormatting,NumberedList,BulletedList,Outdent,Indent,Blockquote,CreateDiv,JustifyBlock,JustifyRight,JustifyCenter,JustifyLeft,BidiLtr,BidiRtl,Language,Link,Unlink,Anchor,Flash,HorizontalRule,Smiley,PageBreak,Iframe,Styles,Format,Font,FontSize,TextColor,BGColor,Maximize,ShowBlocks,About',
-        pasteFilter: "table",
+        pasteFilter: "semantic-content",
+        //pasteFilter: "plain-text",
+        disallowedContent: "ol li",
 
-        editorRemoteUrl: "https://www.xiao5market.com/resources/ckeditor/ckeditor.js"
+        editorRemoteUrl: "https://www.xiao5market.com/resources/ckeditor/ckeditor.js",
+        placeholderRemoteSrc: "http://static.xiao5market.com//test/5cc9b850-7fb6-11e9-a2d3-9be340027365-image.png"
     };
 
     export default {
@@ -117,8 +122,21 @@
 
             getEditorNamespace( this.config.editorRemoteUrl ).then( CKEDITOR => {
                 const constructor = this.type === 'inline' ? 'inline' : 'replace';
+                const conf = {
+                    allowedContent: {
+                        $1: {
+                            // Use the ability to specify elements as an object.
+                            elements: CKEDITOR.dtd,
+                            attributes: true,
+                            styles: true,
+                            classes: true
+                        }
+                    },
+                    disallowedContent: 'ol; li; script; *[on*]'
+                };
                 this.editor = CKEDITOR[ constructor ]( this.$refs.editor, {
                     ...config,
+                    ...conf,
                     ...this.config,
                     uploadUrl: this.uploaderConfig.url?this.uploaderConfig.url:config.uploadUrl,
                     filebrowserImageUploadUrl: this.uploaderConfig.url?this.uploaderConfig.url:config.filebrowserImageUploadUrl
@@ -157,6 +175,20 @@
                 editor.on( 'blur', evt => {
                     this.$emit( 'blur', evt, editor );
                 } );
+
+                editor.on( 'paste', evt => {
+                    evt.data.dataValue = evt.data.dataTransfer.getData( 'text/html' )
+                        .replace(/<p\s+[^>]*>\s*<span[^>]*>\s*<\/span>\s*<br>\s*<\/p>/g, '<p></p>')
+                        .replace(/<span\s+class="Apple-converted-space">\s+<\/span>/g, 'imgPlaceHolder')
+                        .replace(/<span\s+class="[^"]*">\s*<\/span>/g, 'spanPlaceHolder');
+                }, null, null, 2 );
+
+                editor.on( 'paste', evt => {
+
+                    evt.data.dataValue = evt.data.dataValue.replace(/imgPlaceHolder/g, `<img style="height: 20px; border: 1px solid red;" src="${config.placeholderRemoteSrc}"><span>&nbsp;</span>`)
+                    evt.data.dataValue = evt.data.dataValue.replace(/spanPlaceHolder/g, `<img style="height: 20px; border: 1px solid red;" src="${config.placeholderRemoteSrc}"><span>&nbsp;</span>`)
+
+                });
 
                 editor.on( 'fileUploadRequest', function( evt ) {
                     var fileLoader = evt.data.fileLoader,

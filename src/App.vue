@@ -1,19 +1,41 @@
 <template>
-  <div id="app" style="text-align: left">
-    <h1>PyEditor 示例</h1>
+    <div id="app" style="text-align: left">
+        <h2>inline</h2>
+        <PyEditor type="inline"
+                  :config="config"
+                  :uploaderConfig="uploaderConfig"
+                  v-model="text"/>
 
-    <h2>使用方式</h2>
+        <h3>上面文本框输入的内容</h3>
+        <div>{{text}}</div>
+        <h3>html</h3>
+        <div v-html="text"></div>
+        <h3>markdown</h3>
+        <div>
+        <pre>
+            <code>
+{{toMd()}}
+            </code>
+        </pre>
+        </div>
 
-    <ul style="list-style: decimal;">
-      <li>将ckeditor_4.12.0_dev.zip解压到可访问目录</li>
-      <li>设置editorRemoteUrl参数为上一步的绝对/相对地址</li>
-      <li>可在vue中引入PyEditor.vue，使用示例如下所示</li>
-    </ul>
+        <h2>replace</h2>
+        <PyEditor type="replace"/>
 
-    <h2>图片上传</h2>
+        <h1>PyEditor 示例</h1>
 
-    <p>通过如下属性设置图片上传</p>
-<pre><code>
+        <h2>使用方式</h2>
+
+        <ul style="list-style: decimal;">
+            <li>将ckeditor_4.12.0_dev.zip解压到可访问目录</li>
+            <li>设置editorRemoteUrl参数为上一步的绝对/相对地址</li>
+            <li>可在vue中引入PyEditor.vue，使用示例如下所示</li>
+        </ul>
+
+        <h2>图片上传</h2>
+
+        <p>通过如下属性设置图片上传</p>
+        <pre><code>
 uploaderConfig: {
   // 上传链接
   url: "/api/upload",
@@ -26,8 +48,8 @@ uploaderConfig: {
 }
 </code></pre>
 
-<p>服务端的返回格式需要做特殊处理</p>
-<pre><code>
+        <p>服务端的返回格式需要做特殊处理</p>
+        <pre><code>
 // 错误时请返回
 {
     "uploaded": 0,
@@ -37,7 +59,7 @@ uploaderConfig: {
 }
 </code></pre>
 
-<pre><code>
+        <pre><code>
 // 正确时请返回
 {
     "uploaded": 1,
@@ -46,80 +68,115 @@ uploaderConfig: {
 }
 </code></pre>
 
-    <h2>inline</h2>
-    <PyEditor type="inline"
-              :config="config"
-              :uploaderConfig="uploaderConfig"
-              v-model="text"/>
+        <h2>checklist</h2>
 
-    <h2>上面文本框输入的内容</h2>
-    <div>{{text}}</div>
-
-    <h2>replace</h2>
-    <PyEditor type="replace"/>
-
-    <h2>checklist</h2>
-
-    <ul style="list-style: none; text-align: left">
-      <li><label>ckeditor 源码fork及打包流程串通 <input type="checkbox" checked></label></li>
-      <li><label>集成jmeditor <input type="checkbox" checked></label></li>
-      <li><label>ckeditor-vue 组件编写 <input type="checkbox" checked></label></li>
-      <li><label>格式归一化  <input type="checkbox"></label>
         <ul style="list-style: none; text-align: left">
-          <li><label>无格式化粘贴支持 <input type="checkbox" checked></label></li>
-          <li><label>粘贴之后取消样式 <input type="checkbox" checked></label></li>
-          <li><label>公式抽取 <input type="checkbox"></label></li>
-          <li><label>需要doc文档进行测试 <input type="checkbox" checked></label></li>
+            <li><label>ckeditor 源码fork及打包流程串通 <input type="checkbox" checked></label></li>
+            <li><label>集成jmeditor <input type="checkbox" checked></label></li>
+            <li><label>ckeditor-vue 组件编写 <input type="checkbox" checked></label></li>
+            <li><label>格式归一化 <input type="checkbox"></label>
+                <ul style="list-style: none; text-align: left">
+                    <li><label>无格式化粘贴支持 <input type="checkbox" checked></label></li>
+                    <li><label>粘贴之后取消样式 <input type="checkbox" checked></label></li>
+                    <li><label>公式抽取 <input type="checkbox"></label></li>
+                    <li><label>需要doc文档进行测试 <input type="checkbox" checked></label></li>
+                </ul>
+            </li>
+            <li><label>单个图片上传（需要接口支持）<input type="checkbox" checked></label></li>
+            <li><label>word中的图片粘贴上传，可以参考顺成的浏览器插件对编辑器进行整合<input type="checkbox"></label></li>
+            <li><label>图文混排<input type="checkbox" checked></label></li>
+            <li><label>图片处理：拖拽，大小更改<input type="checkbox" checked></label></li>
+            <li><label>集成测试<input type="checkbox"></label></li>
         </ul>
-      </li>
-      <li><label>单个图片上传（需要接口支持）<input type="checkbox" checked></label></li>
-      <li><label>word中的图片粘贴上传，可以参考顺成的浏览器插件对编辑器进行整合<input type="checkbox"></label></li>
-      <li><label>图文混排<input type="checkbox" checked></label></li>
-      <li><label>图片处理：拖拽，大小更改<input type="checkbox" checked></label></li>
-      <li><label>集成测试<input type="checkbox"></label></li>
-    </ul>
-  </div>
+    </div>
 
 </template>
 
 <script>
-import PyEditor from './components/PyEditor';
+    import PyEditor from './components/PyEditor';
+    import TurndownService from 'turndown';
 
-export default {
-  name: 'app',
-  components: {
-    PyEditor
-  },
-  data: function() {
-    return {
-      // 编辑器远程下载地址（将ckeditor_4.12.0_dev.zip解压到可访问目录）
-      config: {
-        editorRemoteUrl: "https://www.xiao5market.com/resources/ckeditor/ckeditor.js"
-      },
-      uploaderConfig: {
-        // 上传链接
-        url: "/api/upload",
-        // 上传接口自定义参数
-        params: {
-          sessionId: "123"
+    var turndownService = new TurndownService();
+
+    turndownService.addRule('keep', {
+            filter: ['img', 'span'],
+            replacement: function (content, node) {
+                if(node.getAttribute('data-latex')) {
+                    return node.getAttribute('data-latex');
+                } else {
+                    return node.isBlock ? '\n\n' + node.outerHTML + '\n\n' : node.outerHTML;
+                }
+            }
+        }
+    );
+
+    function latexToRtf(text) {
+        const div = window.jQuery('<div>');
+        div.mathquill('latex', )
+        var mathHTML = '<span class="mathquill-rendered-math" style="font-size:20px;" data-latex="' + getIFrame(jme_fid).contentWindow.jQuery("#jme-math").mathquill('latex') + '">' + $("#jme-math",thedoc).html() + '</span><span>&nbsp;</span>';
+        return $('')
+    }
+
+    turndownService.keep(['img']);
+
+    export default {
+        name: 'app',
+        components: {
+            PyEditor
         },
-        // 上传图片的属性名
-        key: "upload"
-      },
-      text: ``
-    };
-  },
-  mounted: function() {}
-}
+        data: function () {
+
+            const text = `
+            \\sqrt[1]{2}
+
+<img alt="" height="72" src="http://static.xiao5market.com//test/7ad49320-7fc4-11e9-a2d3-9be340027365-icon02.png" width="59">
+
+            `;
+
+            return {
+                // 编辑器远程下载地址（将ckeditor_4.12.0_dev.zip解压到可访问目录）
+                config: {
+                    editorRemoteUrl: "./ckeditor/ckeditor.js",
+                    height: 400
+                },
+                uploaderConfig: {
+                    // 上传链接
+                    url: "/api/upload",
+                    // 上传接口自定义参数
+                    params: {
+                        sessionId: "123"
+                    },
+                    // 上传图片的属性名
+                    key: "upload"
+                },
+                text: text
+            };
+        },
+        mounted: function () {
+        },
+        methods: {
+            toMd() {
+                const md = turndownService.turndown(this.text);
+                console.log(this.text)
+                console.log(md)
+                return md;
+            }
+        }
+    }
 </script>
 
 <style>
-#app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
-}
+    #app {
+        font-family: 'Avenir', Helvetica, Arial, sans-serif;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+        text-align: center;
+        color: #2c3e50;
+        margin-top: 60px;
+    }
+
+    /*设置textarea高度*/
+    .cke_textarea_inline {
+        min-height: 200px;
+    }
 </style>
