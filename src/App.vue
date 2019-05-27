@@ -110,12 +110,12 @@ uploaderConfig: {
         }
     );
 
-    function latexToRtf(text) {
+    /*function latexToRtf(text) {
         const div = window.jQuery('<div>');
         div.mathquill('latex', )
         var mathHTML = '<span class="mathquill-rendered-math" style="font-size:20px;" data-latex="' + getIFrame(jme_fid).contentWindow.jQuery("#jme-math").mathquill('latex') + '">' + $("#jme-math",thedoc).html() + '</span><span>&nbsp;</span>';
         return $('')
-    }
+    }*/
 
     turndownService.keep(['img']);
 
