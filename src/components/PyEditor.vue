@@ -42,7 +42,7 @@
         //图片上传地址
         filebrowserImageUploadUrl: "/api/upload",
 
-        extraPlugins: 'jme, uploadimage, image2',
+        extraPlugins: 'jme, uploadimage, image2, pastefromword',
 
         toolbarGroups: [
             { name: 'document', groups: [ 'mode', 'document', 'doctools' ] },
@@ -66,7 +66,7 @@
         disallowedContent: "ol li",
 
         editorRemoteUrl: "https://www.xiao5market.com/resources/ckeditor/ckeditor.js",
-        placeholderRemoteSrc: "http://static.xiao5market.com//test/5cc9b850-7fb6-11e9-a2d3-9be340027365-image.png"
+        placeholderRemoteSrc: "http://static.xiao5market.com//test/169ad7b0-8164-11e9-a2d3-9be340027365-image.png"
     };
 
     export default {
@@ -124,11 +124,11 @@
                             // Use the ability to specify elements as an object.
                             elements: CKEDITOR.dtd,
                             attributes: true,
-                            styles: true,
-                            classes: true
+                            styles: false,
+                            classes: false
                         }
                     },
-                    disallowedContent: 'ol; li; script; *[on*]; strong; h*; b;'
+                    disallowedContent: 'ol; li; span; script; *[on*]; strong; h*; b; [style]'
                 };
                 this.editor = CKEDITOR[ constructor ]( this.$refs.editor, {
                     ...config,
@@ -172,17 +172,24 @@
                     this.$emit( 'blur', evt, editor );
                 } );
 
-                editor.on( 'paste', evt => {
+                /*editor.on( 'paste', evt => {
+                    console.log(evt.data.dataValue);
                     evt.data.dataValue = evt.data.dataTransfer.getData( 'text/html' )
                         .replace(/<p\s+[^>]*>\s*<span[^>]*>\s*<\/span>\s*<br>\s*<\/p>/g, '<p></p>')
-                        .replace(/<span\s+class="Apple-converted-space">\s+<\/span>/g, 'imgPlaceHolder')/*
-                        .replace(/<span\s+class="[^"]*">\s*<\/span>/g, 'spanPlaceHolder')*/;
-                }, null, null, 2 );
+                        .replace(/<span\s+class="Apple-converted-space">\s+<\/span>/g, 'imgPlaceHolder')
+                        .replace(/<span\s+class="[^"]*">\s*<\/span>/g, 'spanPlaceHolder');
+                }, null, null, 2 );*/
 
                 editor.on( 'paste', evt => {
 
-                    evt.data.dataValue = evt.data.dataValue.replace(/imgPlaceHolder/g, `<img style="height: 20px; border: 1px solid black;" src="${config.placeholderRemoteSrc}"><span>&nbsp;</span>`);
-                    evt.data.dataValue = evt.data.dataValue.replace(/spanPlaceHolder/g, `<img style="height: 20px; border: 1px solid black;" src="${config.placeholderRemoteSrc}"><span>&nbsp;</span>`);
+                    evt.data.dataValue = evt.data.dataValue.replace(/<span[^>]*>([^<]*)<\/span>/g, function(m, $1){
+                        return $1;
+                    });
+
+                    //src="file:////Users/yaojifeng/Library/Group%20Containers/UBF8T346G9.Office/TemporaryItems/msohtmlclip/clip_image002.png"
+                    evt.data.dataValue = evt.data.dataValue.replace(/<(img[^>]+)src="file:[^"]+"/g, function(m, $1) {
+                        return '<' + $1 + 'border="1px" src="' + config.placeholderRemoteSrc + '"' + 'style="border: 1px solid black; height: 20px;"';
+                    });
 
                 });
 
