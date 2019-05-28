@@ -126,12 +126,7 @@ uploaderConfig: {
         },
         data: function () {
 
-            const text = `
-            \\sqrt[1]{2}
-
-<img alt="" height="72" src="http://static.xiao5market.com//test/7ad49320-7fc4-11e9-a2d3-9be340027365-icon02.png" width="59">
-
-            `;
+            const text = ``;
 
             return {
                 // 编辑器远程下载地址（将ckeditor_4.12.0_dev.zip解压到可访问目录）
@@ -157,8 +152,6 @@ uploaderConfig: {
         methods: {
             toMd() {
                 const md = turndownService.turndown(this.text);
-                console.log(this.text)
-                console.log(md)
                 return md;
             }
         }

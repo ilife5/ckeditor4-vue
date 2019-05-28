@@ -1,7 +1,5 @@
 <template>
-    <div :class="`${type==='inline'?'editor-wrapper':''}`">
-        <textarea ref="editor" style="height: 100px;"></textarea>
-    </div>
+    <div :class="`${type==='inline'?'editor-wrapper':''}`"><textarea ref="editor" style="height: 100px;"></textarea></div>
 </template>
 
 <script>
@@ -130,7 +128,7 @@
                             classes: true
                         }
                     },
-                    disallowedContent: 'ol; li; script; *[on*]'
+                    disallowedContent: 'ol; li; script; *[on*]; strong; h*; b;'
                 };
                 this.editor = CKEDITOR[ constructor ]( this.$refs.editor, {
                     ...config,
@@ -177,8 +175,8 @@
                 editor.on( 'paste', evt => {
                     evt.data.dataValue = evt.data.dataTransfer.getData( 'text/html' )
                         .replace(/<p\s+[^>]*>\s*<span[^>]*>\s*<\/span>\s*<br>\s*<\/p>/g, '<p></p>')
-                        .replace(/<span\s+class="Apple-converted-space">\s+<\/span>/g, 'imgPlaceHolder')
-                        .replace(/<span\s+class="[^"]*">\s*<\/span>/g, 'spanPlaceHolder');
+                        .replace(/<span\s+class="Apple-converted-space">\s+<\/span>/g, 'imgPlaceHolder');
+                        //.replace(/<span\s+class="[^"]*">\s*<\/span>/g, 'spanPlaceHolder');
                 }, null, null, 2 );
 
                 editor.on( 'paste', evt => {
