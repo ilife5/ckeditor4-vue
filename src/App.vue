@@ -79,14 +79,22 @@ uploaderConfig: {
                     <li><label>无格式化粘贴支持 <input type="checkbox" checked></label></li>
                     <li><label>粘贴之后取消样式 <input type="checkbox" checked></label></li>
                     <li><label>公式抽取 <input type="checkbox"></label></li>
-                    <li><label>需要doc文档进行测试 <input type="checkbox" checked></label></li>
+                    <li><label>图片占位符<input type="checkbox" checked></label></li>
+                    <li><label>行内特殊符号占位符（准确率需要迭代优化）<input type="checkbox"></label></li>
                 </ul>
             </li>
             <li><label>单个图片上传（需要接口支持）<input type="checkbox" checked></label></li>
-            <li><label>word中的图片粘贴上传，可以参考顺成的浏览器插件对编辑器进行整合<input type="checkbox"></label></li>
+            <li><label>多图上传，通过拖拽<input type="checkbox" checked></label></li>
             <li><label>图文混排<input type="checkbox" checked></label></li>
             <li><label>图片处理：拖拽，大小更改<input type="checkbox" checked></label></li>
             <li><label>集成测试<input type="checkbox"></label></li>
+            <li><label>编辑器默认高度<input type="checkbox" checked></label></li>
+            <li><label>公式编辑 <input type="checkbox"></label>
+                <ul style="list-style: none; text-align: left">
+                    <li><label>选中公式可继续编辑 <input type="checkbox"></label></li>
+                    <li><label>公式编辑器可以先输入文字，然后选择公式 <input type="checkbox"></label></li>
+                </ul>
+            </li>
         </ul>
     </div>
 
@@ -170,6 +178,6 @@ uploaderConfig: {
 
     /*设置textarea高度*/
     .cke_textarea_inline {
-        min-height: 200px;
+        min-height:100px;
     }
 </style>

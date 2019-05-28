@@ -175,8 +175,8 @@
                 editor.on( 'paste', evt => {
                     evt.data.dataValue = evt.data.dataTransfer.getData( 'text/html' )
                         .replace(/<p\s+[^>]*>\s*<span[^>]*>\s*<\/span>\s*<br>\s*<\/p>/g, '<p></p>')
-                        .replace(/<span\s+class="Apple-converted-space">\s+<\/span>/g, 'imgPlaceHolder');
-                        //.replace(/<span\s+class="[^"]*">\s*<\/span>/g, 'spanPlaceHolder');
+                        .replace(/<span\s+class="Apple-converted-space">\s+<\/span>/g, 'imgPlaceHolder')/*
+                        .replace(/<span\s+class="[^"]*">\s*<\/span>/g, 'spanPlaceHolder')*/;
                 }, null, null, 2 );
 
                 editor.on( 'paste', evt => {
