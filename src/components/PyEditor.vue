@@ -183,8 +183,8 @@
 
                 editor.on( 'paste', evt => {
 
-                    evt.data.dataValue = evt.data.dataValue.replace(/imgPlaceHolder/g, `<img style="height: 20px; border: 1px solid red;" src="${config.placeholderRemoteSrc}"><span>&nbsp;</span>`)
-                    evt.data.dataValue = evt.data.dataValue.replace(/spanPlaceHolder/g, `<img style="height: 20px; border: 1px solid red;" src="${config.placeholderRemoteSrc}"><span>&nbsp;</span>`)
+                    evt.data.dataValue = evt.data.dataValue.replace(/imgPlaceHolder/g, `<img style="height: 20px; border: 1px solid black;" src="${config.placeholderRemoteSrc}"><span>&nbsp;</span>`);
+                    evt.data.dataValue = evt.data.dataValue.replace(/spanPlaceHolder/g, `<img style="height: 20px; border: 1px solid black;" src="${config.placeholderRemoteSrc}"><span>&nbsp;</span>`);
 
                 });
 
