@@ -42,7 +42,7 @@
         //图片上传地址
         filebrowserImageUploadUrl: "/api/upload",
 
-        extraPlugins: 'jme, uploadimage, image2, pastefromword',
+        extraPlugins: 'uploadimage, image2, pastefromword, jme',
 
         toolbarGroups: [
             { name: 'document', groups: [ 'mode', 'document', 'doctools' ] },
@@ -60,13 +60,14 @@
             { name: 'about', groups: [ 'about' ] }
         ],
 
-        removeButtons: 'Source,Save,NewPage,Preview,Print,Templates,Cut,Copy,Paste,PasteText,PasteFromWord,Undo,Redo,Find,Replace,SelectAll,Form,Checkbox,Radio,TextField,Textarea,Select,Button,ImageButton,HiddenField,CopyFormatting,NumberedList,BulletedList,Outdent,Indent,Blockquote,CreateDiv,JustifyBlock,JustifyRight,JustifyCenter,JustifyLeft,BidiLtr,BidiRtl,Language,Link,Unlink,Anchor,Flash,HorizontalRule,Smiley,PageBreak,Iframe,Styles,Format,Font,FontSize,TextColor,BGColor,Maximize,ShowBlocks,About',
+        removeButtons: 'Source,Save,NewPage,Preview,Print,Templates,Cut,Copy,Paste,PasteText,PasteFromWord,Undo,Redo,Find,Replace,SelectAll,Form,Checkbox,Radio,TextField,Textarea,Select,Button,ImageButton,HiddenField,CopyFormatting,NumberedList,BulletedList,Outdent,Indent,Blockquote,CreateDiv,JustifyBlock,JustifyRight,JustifyCenter,JustifyLeft,BidiLtr,BidiRtl,Language,Link,Unlink,Anchor,Flash,HorizontalRule,Smiley,PageBreak,Iframe,Styles,Format,Font,FontSize,TextColor,BGColor,Maximize,ShowBlocks,About,Subscript,Superscript',
         pasteFilter: "semantic-content",
         //pasteFilter: "plain-text",
         disallowedContent: "ol li",
 
         editorRemoteUrl: "https://www.xiao5market.com/resources/ckeditor/ckeditor.js",
-        placeholderRemoteSrc: "http://static.xiao5market.com//test/169ad7b0-8164-11e9-a2d3-9be340027365-image.png"
+        placeholderRemoteSrc: "http://static.xiao5market.com//test/169ad7b0-8164-11e9-a2d3-9be340027365-image.png",
+        language: "zh-cn"
     };
 
     export default {
@@ -186,7 +187,6 @@
                         return $1;
                     });
 
-                    //src="file:////Users/yaojifeng/Library/Group%20Containers/UBF8T346G9.Office/TemporaryItems/msohtmlclip/clip_image002.png"
                     evt.data.dataValue = evt.data.dataValue.replace(/<(img[^>]+)src="file:[^"]+"/g, function(m, $1) {
                         return '<' + $1 + 'border="1px" src="' + config.placeholderRemoteSrc + '"' + 'style="border: 1px solid black; height: 20px;"';
                     });
