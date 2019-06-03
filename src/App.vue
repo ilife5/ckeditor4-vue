@@ -144,7 +144,8 @@ uploaderConfig: {
                 // 编辑器远程下载地址（将ckeditor_4.12.0_dev.zip解压到可访问目录）
                 config: {
                     editorRemoteUrl: "./ckeditor/ckeditor.js",
-                    height: 400
+                    height: 400,
+                    customerResponse: false
                 },
                 uploaderConfig: {
                     // 上传链接

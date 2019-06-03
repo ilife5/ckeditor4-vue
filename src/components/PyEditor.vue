@@ -81,7 +81,8 @@
             config: {
                 type: Object,
                 default: () => ( {
-                    editorRemoteUrl: "https://www.xiao5market.com/resources/ckeditor/ckeditor.js"
+                    editorRemoteUrl: "https://www.xiao5market.com/resources/ckeditor/ckeditor.js",
+                    customerResponse: "true"
                 } )
             },
             uploaderConfig: {
@@ -242,6 +243,26 @@
                     }
                     evt.stop();
                 }, null, null, 4 );
+
+                if(this.config.customerResponse) {
+                    editor.on( 'fileUploadResponse', function( evt ) {
+                        // Prevent the default response handler.
+                        evt.stop();
+                        // Get XHR and response.
+                        var data = evt.data,
+                            xhr = data.fileLoader.xhr,
+                            response = xhr.responseText.split( '|' );
+
+                        if ( response[ 1 ] ) {
+                            // An error occurred during upload.
+                            data.message = response[ 1 ];
+                            evt.cancel();
+                        } else {
+                            data.url = 'https://pyds.oss-cn-beijing.aliyuncs.com' + JSON.parse(response[ 0 ]).data;
+                            data.uploaded = 1;
+                        }
+                    } );
+                }
             }
         },
         watch: {
@@ -262,8 +283,8 @@
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
     .editor-wrapper {
-        border: 1px solid #d1d1d1;
         padding: 0;
         margin: 0 0 10px 0;
+        border: 0;
     }
 </style>
