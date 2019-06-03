@@ -79,6 +79,7 @@ uploaderConfig: {
                     <li><label>无格式化粘贴支持 <input type="checkbox" checked></label></li>
                     <li><label>粘贴之后取消样式 <input type="checkbox" checked></label></li>
                     <li><label>公式抽取 <input type="checkbox"></label></li>
+                    <li><label>公式使用占位符 <input type="checkbox" checked></label></li>
                     <li><label>图片占位符<input type="checkbox" checked></label></li>
                     <li><label>行内特殊符号占位符（准确率需要迭代优化）<input type="checkbox"></label></li>
                     <li><label>支持自定义样式（语文下面的点）<input type="checkbox"></label></li>
@@ -90,11 +91,12 @@ uploaderConfig: {
             <li><label>图片处理：拖拽，大小更改<input type="checkbox" checked></label></li>
             <li><label>集成测试<input type="checkbox"></label></li>
             <li><label>编辑器默认高度<input type="checkbox" checked></label></li>
+            <li><label>插入图片不同步问题<input type="checkbox" checked></label></li>
             <li><label>公式编辑 <input type="checkbox"></label>
                 <ul style="list-style: none; text-align: left">
                     <li><label>选中公式可继续编辑 <input type="checkbox"></label></li>
                     <li><label>公式编辑器可以先输入文字，然后选择公式 <input type="checkbox"></label></li>
-                    <li><label>第二次编辑时清空前一个公式<input type="checkbox"></label></li>
+                    <li><label>第二次编辑时清空前一个公式<input type="checkbox" checked></label></li>
                 </ul>
             </li>
         </ul>
