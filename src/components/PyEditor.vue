@@ -67,6 +67,7 @@
 
         editorRemoteUrl: "https://www.xiao5market.com/resources/ckeditor/ckeditor.js",
         placeholderRemoteSrc: "http://static.xiao5market.com//test/169ad7b0-8164-11e9-a2d3-9be340027365-image.png",
+        mathTypeRemoteSrc: "http://static.xiao5market.com//test/615b9e70-8546-11e9-a2d3-9be340027365-image.png",
         language: "zh-cn"
     };
 
@@ -118,6 +119,7 @@
         mounted: function() {
 
             getEditorNamespace( this.config.editorRemoteUrl ).then( CKEDITOR => {
+                CKEDITOR.verbosity = 0;
                 const constructor = this.type === 'inline' ? 'inline' : 'replace';
                 const conf = {
                     allowedContent: {
@@ -126,10 +128,10 @@
                             elements: CKEDITOR.dtd,
                             attributes: true,
                             styles: false,
-                            classes: false
+                            classes: true
                         }
                     },
-                    disallowedContent: 'ol; li; span; script; *[on*]; strong; h*; b; [style]'
+                    disallowedContent: 'ol; li; script; *[on*]; strong; h*; b;'
                 };
                 this.editor = CKEDITOR[ constructor ]( this.$refs.editor, {
                     ...config,
@@ -165,6 +167,13 @@
 
                 editor.on( 'change', debounce( emitInputEvent, INPUT_EVENT_DEBOUNCE_WAIT ));
 
+                editor.on( 'fileUploadResponse', () => {
+                    setTimeout(() => {
+                        emitInputEvent();
+                    }, INPUT_EVENT_DEBOUNCE_WAIT);
+                });
+
+
                 editor.on( 'focus', evt => {
                     this.$emit( 'focus', evt, editor );
                 });
@@ -173,19 +182,32 @@
                     this.$emit( 'blur', evt, editor );
                 } );
 
-                /*editor.on( 'paste', evt => {
-                    console.log(evt.data.dataValue);
+                editor.on( 'paste', evt => {
                     evt.data.dataValue = evt.data.dataTransfer.getData( 'text/html' )
-                        .replace(/<p\s+[^>]*>\s*<span[^>]*>\s*<\/span>\s*<br>\s*<\/p>/g, '<p></p>')
                         .replace(/<span\s+class="Apple-converted-space">\s+<\/span>/g, 'imgPlaceHolder')
                         .replace(/<span\s+class="[^"]*">\s*<\/span>/g, 'spanPlaceHolder');
-                }, null, null, 2 );*/
+                }, null, null, 2 );
 
                 editor.on( 'paste', evt => {
+
+                    const ParaStart = /<m:(\w+)>/;
 
                     evt.data.dataValue = evt.data.dataValue.replace(/<span[^>]*>([^<]*)<\/span>/g, function(m, $1){
                         return $1;
                     });
+
+                    let result = evt.data.dataValue.match(ParaStart);
+
+                    while(result) {
+                        let start = evt.data.dataValue.indexOf(result[0]);
+                        let end = evt.data.dataValue.indexOf(result[0].replace('<', '</')) + result[0].length + 1;
+
+                        evt.data.dataValue = evt.data.dataValue.substring(0, start)
+                            + '<img border="1px" src="' + config.mathTypeRemoteSrc + '" ' + 'style="border: 1px solid black; height: 20px;"/>'
+                            + evt.data.dataValue.substring(end).replace(/^<span[^>]*>(<span[^>]*>)*<img[^>]*\/>(<\/span*>)*<\/span>/, '');
+
+                        result = evt.data.dataValue.match(ParaStart);
+                    }
 
                     evt.data.dataValue = evt.data.dataValue.replace(/<(img[^>]+)src="file:[^"]+"/g, function(m, $1) {
                         return '<' + $1 + 'border="1px" src="' + config.placeholderRemoteSrc + '"' + 'style="border: 1px solid black; height: 20px;"';

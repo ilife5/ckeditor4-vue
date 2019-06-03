@@ -81,6 +81,7 @@ uploaderConfig: {
                     <li><label>公式抽取 <input type="checkbox"></label></li>
                     <li><label>图片占位符<input type="checkbox" checked></label></li>
                     <li><label>行内特殊符号占位符（准确率需要迭代优化）<input type="checkbox"></label></li>
+                    <li><label>支持自定义样式（语文下面的点）<input type="checkbox"></label></li>
                 </ul>
             </li>
             <li><label>单个图片上传（需要接口支持）<input type="checkbox" checked></label></li>
@@ -93,6 +94,7 @@ uploaderConfig: {
                 <ul style="list-style: none; text-align: left">
                     <li><label>选中公式可继续编辑 <input type="checkbox"></label></li>
                     <li><label>公式编辑器可以先输入文字，然后选择公式 <input type="checkbox"></label></li>
+                    <li><label>第二次编辑时清空前一个公式<input type="checkbox"></label></li>
                 </ul>
             </li>
         </ul>
@@ -134,7 +136,7 @@ uploaderConfig: {
         },
         data: function () {
 
-            const text = ``;
+            const text = `<p><span class="mathquill-rendered-math" data-cke-filter="off"  data-latex="\\log_1\\oint_21" style="font-size:20px"><span class="textarea"><textarea></textarea></span><span mathquill-command-id="36">log</span><sub class="non-leaf" mathquill-block-id="39" mathquill-command-id="38"><span mathquill-command-id="41">1</span></sub><span mathquill-command-id="42">∮</span><sub class="non-leaf" mathquill-block-id="45" mathquill-command-id="44"><span mathquill-command-id="51">2</span></sub><span mathquill-command-id="50">1</span></span><span>&nbsp;</span></p>`;
 
             return {
                 // 编辑器远程下载地址（将ckeditor_4.12.0_dev.zip解压到可访问目录）
