@@ -1,0 +1,13 @@
+[data-role=dot] {
+    position: relative;
+}
+[data-role=dot]:before {
+    content: " ";
+    position: absolute;
+    bottom: -1px;
+    width: 2px;
+    height: 2px;
+    background: #2c3e50;
+    border-radius: 50%;
+    left: calc(50% - 1px);
+}

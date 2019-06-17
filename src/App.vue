@@ -105,6 +105,7 @@ uploaderConfig: {
 </template>
 
 <script>
+    import './assets/style.css';
     import PyEditor from './components/PyEditor';
     import TurndownService from 'turndown';
 

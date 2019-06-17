@@ -60,7 +60,7 @@
             { name: 'about', groups: [ 'about' ] }
         ],
 
-        removeButtons: 'Source,Save,NewPage,Preview,Print,Templates,Cut,Copy,Paste,PasteText,PasteFromWord,Undo,Redo,Find,Replace,SelectAll,Form,Checkbox,Radio,TextField,Textarea,Select,Button,ImageButton,HiddenField,CopyFormatting,NumberedList,BulletedList,Outdent,Indent,Blockquote,CreateDiv,JustifyBlock,JustifyRight,JustifyCenter,JustifyLeft,BidiLtr,BidiRtl,Language,Link,Unlink,Anchor,Flash,HorizontalRule,Smiley,PageBreak,Iframe,Styles,Format,Font,FontSize,TextColor,BGColor,Maximize,ShowBlocks,About,Subscript,Superscript',
+        removeButtons: 'Source,Save,NewPage,Preview,Print,Templates,Cut,Copy,Paste,PasteText,Undo,Redo,Find,Replace,SelectAll,Form,Checkbox,Radio,TextField,Textarea,Select,Button,ImageButton,HiddenField,CopyFormatting,NumberedList,BulletedList,Outdent,Indent,Blockquote,CreateDiv,JustifyBlock,JustifyRight,JustifyCenter,JustifyLeft,BidiLtr,BidiRtl,Language,Link,Unlink,Anchor,Flash,HorizontalRule,Smiley,PageBreak,Iframe,Styles,Format,Font,FontSize,TextColor,BGColor,Maximize,ShowBlocks,About,Subscript,Superscript',
         pasteFilter: "semantic-content",
         //pasteFilter: "plain-text",
         disallowedContent: "ol li",
@@ -193,8 +193,8 @@
 
                     const ParaStart = /<m:(\w+)>/;
 
-                    evt.data.dataValue = evt.data.dataValue.replace(/<span[^>]*>([^<]*)<\/span>/g, function(m, $1){
-                        return $1;
+                    evt.data.dataValue = evt.data.dataValue.replace(/(style="[^"]*font-emphasize[^"]*:[^"]*dot[^"]*[^"]*")/g, function(m, $1){
+                        return 'data-role="dot"' + $1;
                     });
 
                     let result = evt.data.dataValue.match(ParaStart);
@@ -204,7 +204,7 @@
                         let end = evt.data.dataValue.indexOf(result[0].replace('<', '</')) + result[0].length + 1;
 
                         evt.data.dataValue = evt.data.dataValue.substring(0, start)
-                            + '<img border="1px" src="' + config.mathTypeRemoteSrc + '" ' + 'style="border: 1px solid black; height: 20px;"/>'
+                            + '<img border="1px" data-role="mathType-placeholder" src="' + config.mathTypeRemoteSrc + '" ' + 'style="border: 1px solid black; height: 20px;"/>'
                             + evt.data.dataValue.substring(end).replace(/^<span[^>]*>(<span[^>]*>)*<img[^>]*\/>(<\/span*>)*<\/span>/, '');
 
                         result = evt.data.dataValue.match(ParaStart);
@@ -231,7 +231,11 @@
                         };
                         reader.readAsDataURL(fileLoader.file);
                     } else {
-                        formData.append( self.uploaderConfig.key, fileLoader.file, fileLoader.fileName );
+                        var fileName = fileLoader.fileName;
+                        if(fileLoader.file.type === 'image/x-emf') {
+                            fileName = fileName.replace(/\.\w+$/, '.emf');
+                        }
+                        formData.append( self.uploaderConfig.key, fileLoader.file, fileName );
 
                         fileLoader.xhr.send( formData );
                     }
