@@ -128,7 +128,7 @@
                             // Use the ability to specify elements as an object.
                             elements: CKEDITOR.dtd,
                             attributes: true,
-                            styles: false,
+                            styles: true,
                             classes: true
                         }
                     },
