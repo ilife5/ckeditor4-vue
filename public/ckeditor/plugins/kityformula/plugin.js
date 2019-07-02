@@ -1,0 +1,1 @@
+﻿CKEDITOR.plugins.add("kityformula",{icons:"kityformula",init:function(a){a.addCommand("kityformula",new CKEDITOR.dialogCommand("kityformulaDialog"));a.ui.addButton("Kityformula",{label:"kityformula",command:"kityformula",toolbar:"insert"});CKEDITOR.dialog.add("kityformulaDialog",this.path+"dialogs/kityformula.js")}});

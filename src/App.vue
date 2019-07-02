@@ -139,7 +139,8 @@ uploaderConfig: {
         },
         data: function () {
 
-            const text = `<p><span class="mathquill-rendered-math" data-cke-filter="off"  data-latex="\\log_1\\oint_21" style="font-size:20px"><span class="textarea"><textarea></textarea></span><span mathquill-command-id="36">log</span><sub class="non-leaf" mathquill-block-id="39" mathquill-command-id="38"><span mathquill-command-id="41">1</span></sub><span mathquill-command-id="42">∮</span><sub class="non-leaf" mathquill-block-id="45" mathquill-command-id="44"><span mathquill-command-id="51">2</span></sub><span mathquill-command-id="50">1</span></span><span>&nbsp;</span></p>`;
+            let text = `<p><span class="mathquill-rendered-math" data-cke-filter="off"  data-latex="\\log_1\\oint_21" style="font-size:20px"><span class="textarea"><textarea></textarea></span><span mathquill-command-id="36">log</span><sub class="non-leaf" mathquill-block-id="39" mathquill-command-id="38"><span mathquill-command-id="41">1</span></sub><span mathquill-command-id="42">∮</span><sub class="non-leaf" mathquill-block-id="45" mathquill-command-id="44"><span mathquill-command-id="51">2</span></sub><span mathquill-command-id="50">1</span></span><span>&nbsp;</span></p>`;
+            text = '';
 
             return {
                 // 编辑器远程下载地址（将ckeditor_4.12.0_dev.zip解压到可访问目录）

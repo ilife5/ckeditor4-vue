@@ -42,7 +42,7 @@
         //图片上传地址
         filebrowserImageUploadUrl: "/api/upload",
 
-        extraPlugins: 'uploadimage, image2, pastefromword, jme',
+        extraPlugins: 'uploadimage, image2, pastefromword, kityformula',
 
         toolbarGroups: [
             { name: 'document', groups: [ 'mode', 'document', 'doctools' ] },
