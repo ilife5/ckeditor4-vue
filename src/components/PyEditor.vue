@@ -191,14 +191,6 @@
                     this.$emit( 'blur', evt, editor );
                 } );
 
-                /*editor.on( 'paste', evt => {
-
-                    evt.data.dataValue = evt.data.dataValue
-                        .replace(/<span\s+class="Apple-converted-space">\s+<\/span>/g, 'imgPlaceHolder')
-                        .replace(/<span\s+class="[^"]*">\s*<\/span>/g, 'spanPlaceHolder');
-
-                }, null, null, 2 );*/
-
                 editor.on( 'paste', evt => {
 
                     const ParaStart = /<m:(\w+)>/;
@@ -231,8 +223,10 @@
                         return '<span data-role="wave">' + $1 + '</span>';
                     });
 
-                    // 多加一行方便选中
-                    evt.data.dataValue += '<p><span>&nbsp;</span></p>';
+                    // 多加一行方便选中，需要判断是否粘贴的为file（判断dataValue的长度是否大于0）
+                    if(evt.data.dataValue.length > 0) {
+                        evt.data.dataValue += '<p><span>&nbsp;</span></p>';
+                    }
 
                 });
 
