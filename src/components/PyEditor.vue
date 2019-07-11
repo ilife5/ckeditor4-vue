@@ -42,7 +42,7 @@
         //图片上传地址
         filebrowserImageUploadUrl: "/api/upload",
 
-        extraPlugins: 'uploadimage, image2, pastefromword, kityformula',
+        extraPlugins: 'uploadimage, image2, pastefromword, kityformula, emphasize, customerInsert, lineheight, wavy',
 
         toolbarGroups: [
             { name: 'document', groups: [ 'mode', 'document', 'doctools' ] },
@@ -60,14 +60,14 @@
             { name: 'about', groups: [ 'about' ] }
         ],
 
-        removeButtons: 'Source,Save,NewPage,Preview,Print,Templates,Cut,Copy,Paste,PasteText,Undo,Redo,Find,Replace,SelectAll,Form,Checkbox,Radio,TextField,Textarea,Select,Button,ImageButton,HiddenField,CopyFormatting,NumberedList,BulletedList,Outdent,Indent,Blockquote,CreateDiv,JustifyBlock,JustifyRight,JustifyCenter,JustifyLeft,BidiLtr,BidiRtl,Language,Link,Unlink,Anchor,Flash,HorizontalRule,Smiley,PageBreak,Iframe,Styles,Format,Font,FontSize,TextColor,BGColor,Maximize,ShowBlocks,About,Subscript,Superscript',
+        removeButtons: 'Source,Save,NewPage,Preview,Print,Templates,Cut,Copy,Paste,PasteText,Undo,Redo,Find,Replace,SelectAll,Form,Checkbox,Radio,TextField,Textarea,Select,Button,ImageButton,HiddenField,CopyFormatting,NumberedList,BulletedList,Outdent,Indent,Blockquote,CreateDiv,JustifyBlock,JustifyRight,JustifyCenter,JustifyLeft,BidiLtr,BidiRtl,Language,Link,Unlink,Anchor,Flash,HorizontalRule,Smiley,PageBreak,Iframe,Styles,Format,Font,FontSize,TextColor,BGColor,Maximize,ShowBlocks,About,PasteFromWord',
         pasteFilter: "semantic-content",
         //pasteFilter: "plain-text",
         disallowedContent: "ol li",
 
         editorRemoteUrl: "https://www.xiao5market.com/resources/ckeditor/ckeditor.js",
         placeholderRemoteSrc: "http://static.xiao5market.com//test/169ad7b0-8164-11e9-a2d3-9be340027365-image.png",
-        mathTypeRemoteSrc: "http://static.xiao5market.com//test/615b9e70-8546-11e9-a2d3-9be340027365-image.png",
+        mathTypeRemoteSrc: "https://pyds.oss-cn-beijing.aliyuncs.com/uploads/question_img/2019-07-10/ca6752a2-3db8-4211-9d88-f53bc6070eef.png",
         language: "zh-cn"
     };
 
@@ -124,15 +124,21 @@
                 const constructor = this.type === 'inline' ? 'inline' : 'replace';
                 const conf = {
                     allowedContent: {
+                        img: {
+                            attributes: [ '!src', 'alt', 'width', 'height', 'title' ],
+                            styles: ['vertical-align', 'float']
+                        },
+                        span: {
+                            styles: ['line-height', 'text-underline']
+                        },
                         $1: {
                             // Use the ability to specify elements as an object.
                             elements: CKEDITOR.dtd,
-                            attributes: true,
-                            styles: true,
-                            classes: true
+                            attributes: 'data-*',
+                            styles: false,
+                            classes: false
                         }
-                    },
-                    disallowedContent: 'ol; li; script; *[on*]; strong; h*; b;'
+                    }
                 };
                 this.editor = CKEDITOR[ constructor ]( this.$refs.editor, {
                     ...config,
@@ -168,6 +174,8 @@
 
                 editor.on( 'change', debounce( emitInputEvent, INPUT_EVENT_DEBOUNCE_WAIT ));
 
+                //event: instanceReady
+
                 editor.on( 'fileUploadResponse', () => {
                     setTimeout(() => {
                         emitInputEvent();
@@ -183,18 +191,20 @@
                     this.$emit( 'blur', evt, editor );
                 } );
 
-                editor.on( 'paste', evt => {
-                    evt.data.dataValue = evt.data.dataTransfer.getData( 'text/html' )
+                /*editor.on( 'paste', evt => {
+
+                    evt.data.dataValue = evt.data.dataValue
                         .replace(/<span\s+class="Apple-converted-space">\s+<\/span>/g, 'imgPlaceHolder')
                         .replace(/<span\s+class="[^"]*">\s*<\/span>/g, 'spanPlaceHolder');
-                }, null, null, 2 );
+
+                }, null, null, 2 );*/
 
                 editor.on( 'paste', evt => {
 
                     const ParaStart = /<m:(\w+)>/;
 
                     evt.data.dataValue = evt.data.dataValue.replace(/(style="[^"]*font-emphasize[^"]*:[^"]*dot[^"]*[^"]*")/g, function(m, $1){
-                        return 'data-role="dot"' + $1;
+                        return 'data-role="emphasize"' + $1;
                     });
 
                     let result = evt.data.dataValue.match(ParaStart);
@@ -204,8 +214,9 @@
                         let end = evt.data.dataValue.indexOf(result[0].replace('<', '</')) + result[0].length + 1;
 
                         evt.data.dataValue = evt.data.dataValue.substring(0, start)
-                            + '<img border="1px" data-role="mathType-placeholder" src="' + config.mathTypeRemoteSrc + '" ' + 'style="border: 1px solid black; height: 20px;"/>'
-                            + evt.data.dataValue.substring(end).replace(/^<span[^>]*>(<span[^>]*>)*<img[^>]*\/>(<\/span*>)*<\/span>/, '');
+                            + '<img data-cke-realelement border="1px" class="kfformula" title="点击面板上的公式图标进行编辑" data-role="mathType-placeholder" src="' + config.mathTypeRemoteSrc + '" ' + 'style="border: 1px solid black; height: 20px;"/>'
+                            /*+ '<span data-role="mathType-placeholder" title="双击进行公式编辑">&nbsp;</span><span>&nbsp;</span>'*/
+                            + evt.data.dataValue.substring(end).replace(/<img src="data:image\/emf;[^"]*[^>]*>/, '');
 
                         result = evt.data.dataValue.match(ParaStart);
                     }
@@ -214,7 +225,28 @@
                         return '<' + $1 + 'border="1px" src="' + config.placeholderRemoteSrc + '"' + 'style="border: 1px solid black; height: 20px;"';
                     });
 
+                    evt.data.dataValue = evt.data.dataValue.replace(/<u[^>]*style="[^"]*text-underline[^"]*:[^"]*wave[^"]*[^"]*"[^>]*>(.*)<\/u>/g, function(m, $1){
+                        return '<span data-role="wave">' + $1 + '</span>';
+                    }).replace(/<u[^>]*style='[^']*text-underline[^']*:[^']*wave[^']*[^']*'[^>]*>(.*)<\/u>/g, function(m, $1){
+                        return '<span data-role="wave">' + $1 + '</span>';
+                    });
+
+                    // 多加一行方便选中
+                    evt.data.dataValue += '<p><span>&nbsp;</span></p>';
+
                 });
+
+                editor.on( 'doubleclick', function( evt ) {
+                    // If the link has descendants and the last part of it is also a part of a word partially
+                    // unlinked, clicked element may be a descendant of the link, not the link itself (https://dev.ckeditor.com/ticket/11956).
+                    // The evt.data.element.getAscendant( 'img', 1 ) condition allows opening anchor dialog if the anchor is empty (#501).
+                    var element = evt.data.element;
+
+                    if(element.getName() === 'img' && element.getAttribute('data-latex')) {
+                        evt.data.dialog = "kityformulaDialog";
+                    }
+
+                }, null, null, 5);
 
                 editor.on( 'fileUploadRequest', function( evt ) {
                     var fileLoader = evt.data.fileLoader,

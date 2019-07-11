@@ -9,15 +9,22 @@ CKEDITOR.editorConfig = function( config ) {
 	// config.uiColor = '#AADC6E';
 
 	config.removeButtons = 'Underline,Subscript,Superscript,SpecialChar';
-	config.extraPlugins = 'jme, kityformula';
+	config.extraPlugins = 'jme, kityformula, emphasize, customerInsert';
 
 	config.allowedContent = {
+		img: {
+			attributes: [ '!src', 'alt', 'width', 'height' ],
+			styles: ['vertical-align', 'float']
+		},
+		span: {
+			styles: ['line-height', 'text-decoration']
+		},
 		$1: {
 			// Use the ability to specify elements as an object.
 			elements: CKEDITOR.dtd,
-				attributes: true,
-				styles: true,
-				classes: true
+			attributes: 'data-*',
+			styles: false,
+			classes: false
 		}
 	};
 	config.filebrowserImageUploadUrl= "/api/upload";

@@ -139,25 +139,42 @@ uploaderConfig: {
         },
         data: function () {
 
-            let text = `<p><span class="mathquill-rendered-math" data-cke-filter="off"  data-latex="\\log_1\\oint_21" style="font-size:20px"><span class="textarea"><textarea></textarea></span><span mathquill-command-id="36">log</span><sub class="non-leaf" mathquill-block-id="39" mathquill-command-id="38"><span mathquill-command-id="41">1</span></sub><span mathquill-command-id="42">∮</span><sub class="non-leaf" mathquill-block-id="45" mathquill-command-id="44"><span mathquill-command-id="51">2</span></sub><span mathquill-command-id="50">1</span></span><span>&nbsp;</span></p>`;
-            text = '';
+            let text = `<p class=MsoNormal><span style='font-family:"Microsoft YaHei",sans-serif'>微软雅黑<span
+lang=EN-US><o:p></o:p></span></span></p>
+
+<p class=MsoNormal><span style='font-family:黑体'>黑体<span lang=EN-US><o:p></o:p></span></span></p>
+
+<p class=MsoNormal><span style='font-family:宋体'>宋体<span lang=EN-US><o:p></o:p></span></span></p>
+
+<p class=MsoNormal><span style='color:red'>带颜色</span><span style='background:
+yellow;mso-highlight:yellow'>的文字</span><span lang=EN-US><o:p></o:p></span></p>
+
+<p class=MsoNormal><u>带下划线的文字<span lang=EN-US><o:p></o:p></span></u></p>
+
+<p class=MsoNormal><span lang=EN-US style='font-size:12.0pt'>12</span><span
+style='font-size:12.0pt'>号字</span>。<span lang=EN-US style='font-size:16.0pt'>16</span><span
+style='font-size:16.0pt'>号字 <span lang=EN-US><o:p></o:p></span></span></p>
+`;
 
             return {
                 // 编辑器远程下载地址（将ckeditor_4.12.0_dev.zip解压到可访问目录）
                 config: {
                     editorRemoteUrl: "./ckeditor/ckeditor.js",
                     height: 400,
-                    customerResponse: false
+                    customerResponse: true,
+                    notification_duration: 1000
                 },
                 uploaderConfig: {
                     // 上传链接
-                    url: "/api/upload",
+                    //url: "/api/upload",
+                    url: "/task/uploadImg",
                     // 上传接口自定义参数
                     params: {
                         sessionId: "123"
                     },
                     // 上传图片的属性名
-                    key: "upload"
+                    key: "img",
+                    format: 'base64'
                 },
                 text: text
             };

@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        #captrue {
+            position: fixed;
+            top: 200px;
+            right: 100px;
+        }
+
+        #capture {
+            height: 1000px;
+        }
+
+        body {
+            padding-bottom: 2000px;
+        }
+    </style>
+    <script src="./assets/canvas.js"></script>
+</head>
+<body>
+<div id="capture" style="padding: 10px; background: #f5da55">
+    <h4 style="color: #000; ">Hello world!</h4>
+</div>
+
+<div id="captrue">captrue</div>
+
+<script>
+
+    document.getElementById("captrue").addEventListener('click', function() {
+        html2canvas(document.querySelector("#capture"), {
+            y: 0
+        }).then(canvas => {
+            document.body.appendChild(canvas)
+        });
+    });
+</script>
+</body>
+</html>

@@ -1,0 +1,1 @@
+﻿CKEDITOR.plugins.setLang("wavy","zh-cn",{wavy:"波浪线"});
