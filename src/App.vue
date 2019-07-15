@@ -161,20 +161,21 @@ style='font-size:16.0pt'>号字 <span lang=EN-US><o:p></o:p></span></span></p>
                 config: {
                     editorRemoteUrl: "./ckeditor/ckeditor.js",
                     height: 400,
-                    customerResponse: true,
+                  //  customerResponse: true,
                     notification_duration: 1000
                 },
                 uploaderConfig: {
                     // 上传链接
-                    //url: "/api/upload",
-                    url: "/task/uploadImg",
+                    url: "/api/upload",
+                    //url: "/task/uploadImg",
                     // 上传接口自定义参数
                     params: {
                         sessionId: "123"
                     },
                     // 上传图片的属性名
-                    key: "img",
-                    format: 'base64'
+                    //key: "img",
+                    key: "upload"
+                    //format: 'base64'
                 },
                 text: text
             };

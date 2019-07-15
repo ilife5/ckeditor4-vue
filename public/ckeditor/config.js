@@ -9,7 +9,7 @@ CKEDITOR.editorConfig = function( config ) {
 	// config.uiColor = '#AADC6E';
 
 	config.removeButtons = 'Underline,Subscript,Superscript,SpecialChar';
-	config.extraPlugins = 'jme, kityformula, emphasize, customerInsert';
+	config.extraPlugins = 'jme, kityformula, emphasize, customerInsert, lineheight';
 
 	config.allowedContent = {
 		img: {
