@@ -5,9 +5,9 @@
 <script>
     import loadScript from 'load-script';
     import { debounce } from 'lodash-es';
-    import $ from 'jquery';
+    import {editorToMarkdown, toHtml, toMarkdown, portalConfig, log} from '../portal';
 
-    window.$ = window.jQuery = $;
+    portalConfig(window.Laravel.prefix);
 
     const INPUT_EVENT_DEBOUNCE_WAIT = 300;
     let promise;
@@ -62,13 +62,13 @@
 
         removeButtons: 'Source,Save,NewPage,Preview,Print,Templates,Cut,Copy,Paste,PasteText,Undo,Redo,Find,Replace,SelectAll,Form,Checkbox,Radio,TextField,Textarea,Select,Button,ImageButton,HiddenField,CopyFormatting,NumberedList,BulletedList,Outdent,Indent,Blockquote,CreateDiv,JustifyBlock,JustifyRight,JustifyCenter,JustifyLeft,BidiLtr,BidiRtl,Language,Link,Unlink,Anchor,Flash,HorizontalRule,Smiley,PageBreak,Iframe,Styles,Format,Font,FontSize,TextColor,BGColor,Maximize,ShowBlocks,About,PasteFromWord',
         pasteFilter: "semantic-content",
-        //pasteFilter: "plain-text",
-        disallowedContent: "ol li",
 
         editorRemoteUrl: "https://www.xiao5market.com/resources/ckeditor/ckeditor.js",
         placeholderRemoteSrc: "http://static.xiao5market.com//test/169ad7b0-8164-11e9-a2d3-9be340027365-image.png",
         mathTypeRemoteSrc: "https://pyds.oss-cn-beijing.aliyuncs.com/uploads/question_img/2019-07-10/ca6752a2-3db8-4211-9d88-f53bc6070eef.png",
-        language: "zh-cn"
+        language: "zh-cn",
+
+        ossLink: "http://static.xiao5market.com"
     };
 
     export default {
@@ -107,6 +107,10 @@
             customStyle: {
                 type: Object,
                 default: () => ( {} )
+            },
+            format: {
+                type: String,
+                default: 'md'
             }
         },
         data: function() {
@@ -129,38 +133,77 @@
                             styles: ['vertical-align', 'float']
                         },
                         span: {
-                            styles: ['line-height', 'text-underline']
+                            styles: ['line-height', 'text-underline', 'transform']
+                        },
+
+                        table: {
+                            attributes: [ 'border', 'align', 'summary', 'cellspacing', 'cellpadding', 'style' ],
+                        },
+
+                        td: {
+                            attributes: ['colspan', 'rowspan']
+                        },
+
+                        th: {
+                            attributes: ['colspan', 'rowspan', 'scope']
                         },
                         $1: {
                             // Use the ability to specify elements as an object.
-                            elements: CKEDITOR.dtd,
+                            elements: {
+                                p: true,
+                                span: true,
+                                img: true,
+                                table: true,
+                                thead: true,
+                                tbody: true,
+                                tr: true,
+                                td: true,
+                                th: true,
+                                strong: true,
+                                em: true,
+                                u: true,
+                                sub: true,
+                                sup: true,
+                                del: true
+                            },
                             attributes: 'data-*',
                             styles: false,
-                            classes: false
+                            classes: true
                         }
                     }
                 };
-                this.editor = CKEDITOR[ constructor ]( this.$refs.editor, {
+                const finalConfig = {
                     ...config,
                     ...conf,
                     ...this.config,
                     uploadUrl: this.uploaderConfig.url?this.uploaderConfig.url:config.uploadUrl,
                     filebrowserImageUploadUrl: this.uploaderConfig.url?this.uploaderConfig.url:config.filebrowserImageUploadUrl
-                } );
+                };
 
-                this.$_setUpEditorEvents();
+                this.editor = CKEDITOR[ constructor ]( this.$refs.editor, finalConfig );
 
-                if(this.value) {
-                    this.editor.setData(this.value);
-                }
+                this.editor.on('loaded', () => {
+                    // 元数据转化为md
+                    if(this.format === 'md') {
+                        // 元数据设置为markdown
+                        editorToMarkdown(this.value, md => {
+                            this.editor.setData(toHtml(md));
+                            this.$emit( 'input', md, null, this.editor );
+                            this.$emit( 'ready', this.editor );
+                        });
 
-                if ( this.customStyle && this.type !== 'inline' ) {
-                   this.editor.on( 'loaded', () => {
-                       this.editor.container.setStyles( this.customStyle );
-                    } );
-                }
+                    } else {
+                        this.editor.setData(this.value);
+                        this.$emit( 'ready', this.editor );
+                    }
 
-                this.$emit( 'ready', this.editor );
+                    if ( this.customStyle && this.type !== 'inline' ) {
+                        this.editor.container.setStyles( this.customStyle );
+                    }
+
+                    this.$_setUpEditorEvents();
+                });
+
             } ).catch( window.console.error );
         },
         methods: {
@@ -168,8 +211,15 @@
                 const self = this;
                 const editor = this.editor;
                 const emitInputEvent = evt => {
-                    const data = this.$_lastEditorData = editor.getData();
-                    this.$emit( 'input', data, evt, editor );
+
+                    if(this.format === 'md') {
+                        const data = this.$_lastEditorData = toMarkdown(editor.getData());
+                        this.$emit( 'input', data, evt, editor );
+                    } else {
+                        const data = this.$_lastEditorData = editor.getData();
+                        this.$emit( 'input', data, evt, editor );
+                    }
+
                 };
 
                 editor.on( 'change', debounce( emitInputEvent, INPUT_EVENT_DEBOUNCE_WAIT ));
@@ -188,7 +238,12 @@
                 });
 
                 editor.on( 'blur', evt => {
+                    // blur for log
                     this.$emit( 'blur', evt, editor );
+                    if(this.format === 'md') {
+                        const data = editor.getData();
+                        log(toMarkdown(data), data);
+                    }
                 } );
 
                 editor.on( 'paste', evt => {
@@ -297,8 +352,15 @@
         },
         watch: {
             value( newValue, oldValue ) {
-                if ( newValue !== oldValue && newValue !== this.$_lastEditorData ) {
-                    this.editor.setData( newValue );
+
+                if(this.format === 'md') {
+                    if ( newValue !== oldValue && newValue !== this.$_lastEditorData ) {
+                        this.editor.setData( toHtml(newValue) );
+                    }
+                } else {
+                    if ( newValue !== oldValue && newValue !== this.$_lastEditorData ) {
+                        this.editor.setData( newValue );
+                    }
                 }
             },
 

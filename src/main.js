@@ -1,5 +1,6 @@
-import Vue from 'vue'
-import App from './md'
+import Vue from 'vue';
+import 'jquery';
+import App from './Pi'
 
 Vue.config.productionTip = false
 

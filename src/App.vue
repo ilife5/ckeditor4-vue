@@ -107,30 +107,9 @@ uploaderConfig: {
 <script>
     import './assets/style.css';
     import PyEditor from './components/PyEditor';
-    import TurndownService from 'turndown';
+    import {toMarkdown} from './portal';
+    import './assets/mathquill/mathquill.css';
 
-    var turndownService = new TurndownService();
-
-    turndownService.addRule('keep', {
-            filter: ['img', 'span'],
-            replacement: function (content, node) {
-                if(node.getAttribute('data-latex')) {
-                    return node.getAttribute('data-latex');
-                } else {
-                    return node.isBlock ? '\n\n' + node.outerHTML + '\n\n' : node.outerHTML;
-                }
-            }
-        }
-    );
-
-    /*function latexToRtf(text) {
-        const div = window.jQuery('<div>');
-        div.mathquill('latex', )
-        var mathHTML = '<span class="mathquill-rendered-math" style="font-size:20px;" data-latex="' + getIFrame(jme_fid).contentWindow.jQuery("#jme-math").mathquill('latex') + '">' + $("#jme-math",thedoc).html() + '</span><span>&nbsp;</span>';
-        return $('')
-    }*/
-
-    turndownService.keep(['img']);
 
     export default {
         name: 'app',
@@ -139,22 +118,18 @@ uploaderConfig: {
         },
         data: function () {
 
-            let text = `<p class=MsoNormal><span style='font-family:"Microsoft YaHei",sans-serif'>微软雅黑<span
-lang=EN-US><o:p></o:p></span></span></p>
+            let text = '%W%%E%_**<sub>微</sub>~~软~~<sup>雅</sup>~~黑   ![](http://static.xiao5market.com//test/6a941ba1-a695-11e9-91bf-f34b97ae33bd-1.png)~~**_%E% %W%  ^ ![](http://static.xiao5market.com//test/7d041bf1-a695-11e9-91bf-f34b97ae33bd-image-20190715081418-1.png) \\_\\_\\_\\_\\_\\_\\_\\_\\_\\_\\_\\_\\_\\_\\_\\_\\_\\_ ​​​​​​​\n' + 'abc';
 
-<p class=MsoNormal><span style='font-family:黑体'>黑体<span lang=EN-US><o:p></o:p></span></span></p>
-
-<p class=MsoNormal><span style='font-family:宋体'>宋体<span lang=EN-US><o:p></o:p></span></span></p>
-
-<p class=MsoNormal><span style='color:red'>带颜色</span><span style='background:
-yellow;mso-highlight:yellow'>的文字</span><span lang=EN-US><o:p></o:p></span></p>
-
-<p class=MsoNormal><u>带下划线的文字<span lang=EN-US><o:p></o:p></span></u></p>
-
-<p class=MsoNormal><span lang=EN-US style='font-size:12.0pt'>12</span><span
-style='font-size:12.0pt'>号字</span>。<span lang=EN-US style='font-size:16.0pt'>16</span><span
-style='font-size:16.0pt'>号字 <span lang=EN-US><o:p></o:p></span></span></p>
-`;
+            text = '<p><span data-role="wave"><span data-role="emphasize"><em><strong><sub>微</sub><del>软</del><u><sup>雅</sup><del>黑&nbsp; &nbsp;<img src="http://static.xiao5market.com//test/6a941ba1-a695-11e9-91bf-f34b97ae33bd-1.png" alt="" width="82" height="23" /></del></u></strong></em></span>&nbsp;</span>&nbsp;&nbsp;^&nbsp;<span style="line-height:3;"><img src="http://static.xiao5market.com//test/7d041bf1-a695-11e9-91bf-f34b97ae33bd-image-20190715081418-1.png" alt="" /></span>&nbsp;__________________&nbsp;<span style="line-height:4;">​​​​​​​</span></p>\n' +
+                '<p>abc</p>\n' +
+                '<p><span class="mathquill-rendered-math" data-latex="7\\frac{3}{4}-1.125+\\left(2.25-6\\frac{7}{8}\\right)" style="font-size:20px"><span class="textarea"><textarea></textarea></span><span mathquill-command-id="4">7</span><span class="fraction non-leaf" mathquill-command-id="5"><span class="numerator" mathquill-block-id="6"><span mathquill-command-id="9">3</span></span><span class="denominator" mathquill-block-id="7"><span mathquill-command-id="10">4</span></span><span style="display:inline-block; width:0">&nbsp;</span></span><span class="binary-operator" mathquill-command-id="11">−</span><span mathquill-command-id="12">1</span><span mathquill-command-id="13">.</span><span mathquill-command-id="14">1</span><span mathquill-command-id="15">2</span><span mathquill-command-id="16">5</span><span class="binary-operator" mathquill-command-id="17">+</span><span class="non-leaf" mathquill-command-id="18"><span class="paren scaled" style="transform:scale(1.16, 1.89)">(</span><span class="non-leaf" mathquill-block-id="19"><span mathquill-command-id="20">2</span><span mathquill-command-id="21">.</span><span mathquill-command-id="22">2</span><span mathquill-command-id="23">5</span><span class="binary-operator" mathquill-command-id="24">−</span><span mathquill-command-id="26">6</span><span class="fraction non-leaf" mathquill-command-id="27"><span class="numerator" mathquill-block-id="28"><span mathquill-command-id="31">7</span></span><span class="denominator" mathquill-block-id="29"><span mathquill-command-id="32">8</span></span><span style="display:inline-block; width:0">&nbsp;</span></span></span><span class="paren scaled" style="transform:scale(1.16, 1.89)">)</span></span></span></p>\n' +
+                '<table><tbody><tr><td>1</td><td>2</td></tr><tr><td>3</td><td>4</td></tr><tr><td>5</td><td>6</td></tr></tbody></table>\n' +
+                '<p><img src="http://static.xiao5market.com//test/16a03f81-b3a4-11e9-91bf-f34b97ae33bd-image-20190731230134-1.png" alt="" />左侧的图片通过公式编辑器添加  </p>\n' +
+                '<p><img src="http://static.xiao5market.com//test/569562f1-b3a4-11e9-91bf-f34b97ae33bd-1024.png" alt="" width="104" height="104" style="float: right;" />​  </p>\n' +
+                '<p>右侧的图片通过图片上传添加，样式为float</p>\n' +
+                '<p><span style="line-height:2;">该行文字设置了行高</span></p>\n' +
+                '<p><span style="line-height:1;">设置行高</span></p>\n' +
+                '<p><span style="line-height:2;">嵌套设<span style="line-height:3;">置行</span>高</span></p>';
 
             return {
                 // 编辑器远程下载地址（将ckeditor_4.12.0_dev.zip解压到可访问目录）
@@ -184,8 +159,7 @@ style='font-size:16.0pt'>号字 <span lang=EN-US><o:p></o:p></span></span></p>
         },
         methods: {
             toMd() {
-                const md = turndownService.turndown(this.text);
-                return md;
+                return toMarkdown(this.text);
             }
         }
     }

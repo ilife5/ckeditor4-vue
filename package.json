@@ -15,6 +15,7 @@
     "lodash-es": "^4.17.11",
     "showdown": "^1.9.0",
     "turndown": "^5.0.3",
+    "turndown-plugin-gfm": "^1.0.2",
     "vue": "^2.6.10"
   },
   "devDependencies": {

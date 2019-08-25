@@ -13,5 +13,16 @@ module.exports = {
                 changeOrigin: true
             }
         }
+    },
+    chainWebpack: config => {
+        config.module
+            .rule('js')
+            .exclude
+            .add(/assets\/kityformula/);
+
+        config.module
+            .rule('eslint')
+            .exclude
+            .add(/assets\/kityformula/);
     }
 }

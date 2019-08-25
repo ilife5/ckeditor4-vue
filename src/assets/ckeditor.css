@@ -1,0 +1,168 @@
+.cke_editable {
+    cursor: text
+}
+
+.cke_editable img, .cke_editable input, .cke_editable textarea {
+    cursor: default
+}
+
+.cke_show_borders table.cke_show_border, .cke_show_borders table.cke_show_border > tr > td, .cke_show_borders table.cke_show_border > tr > th, .cke_show_borders table.cke_show_border > tbody > tr > td, .cke_show_borders table.cke_show_border > tbody > tr > th, .cke_show_borders table.cke_show_border > thead > tr > td, .cke_show_borders table.cke_show_border > thead > tr > th, .cke_show_borders table.cke_show_border > tfoot > tr > td, .cke_show_borders table.cke_show_border > tfoot > tr > th {
+    border: #d3d3d3 1px dotted
+}
+
+.cke_widget_wrapper {
+    position: relative;
+    outline: none
+}
+
+.cke_widget_inline {
+    display: inline-block
+}
+
+.cke_widget_wrapper:hover > .cke_widget_element {
+    outline: 2px solid #ffd25c;
+    cursor: default
+}
+
+.cke_widget_wrapper:hover .cke_widget_editable {
+    outline: 2px solid #ffd25c
+}
+
+.cke_widget_wrapper.cke_widget_focused > .cke_widget_element, .cke_widget_wrapper .cke_widget_editable.cke_widget_editable_focused {
+    outline: 2px solid #47a4f5
+}
+
+.cke_widget_editable {
+    cursor: text
+}
+
+.cke_widget_drag_handler_container {
+    position: absolute;
+    width: 15px;
+    height: 0;
+    display: none;
+    opacity: 0.75;
+    transition: height 0s 0.2s;
+    line-height: 0
+}
+
+.cke_widget_wrapper:hover > .cke_widget_drag_handler_container {
+    height: 15px;
+    transition: none
+}
+
+.cke_widget_drag_handler_container:hover {
+    opacity: 1
+}
+
+img.cke_widget_drag_handler {
+    cursor: move;
+    width: 15px;
+    height: 15px;
+    display: inline-block
+}
+
+.cke_widget_mask {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: block
+}
+
+.cke_editable.cke_widget_dragging, .cke_editable.cke_widget_dragging * {
+    cursor: move !important
+}
+
+.cke_upload_uploading img {
+    opacity: 0.3
+}
+
+.cke_image_nocaption {
+    line-height: 0
+}
+
+.cke_editable.cke_image_sw, .cke_editable.cke_image_sw * {
+    cursor: sw-resize !important
+}
+
+.cke_editable.cke_image_se, .cke_editable.cke_image_se * {
+    cursor: se-resize !important
+}
+
+.cke_image_resizer {
+    display: none;
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    bottom: -5px;
+    right: -5px;
+    background: #000;
+    outline: 1px solid #fff;
+    line-height: 0;
+    cursor: se-resize;
+}
+
+.cke_image_resizer_wrapper {
+    position: relative;
+    display: inline-block;
+    line-height: 0;
+}
+
+.cke_image_resizer.cke_image_resizer_left {
+    right: auto;
+    left: -5px;
+    cursor: sw-resize;
+}
+
+.cke_widget_wrapper:hover .cke_image_resizer, .cke_image_resizer.cke_image_resizing {
+    display: block
+}
+
+.cke_editable[contenteditable="false"] .cke_image_resizer {
+    display: none;
+}
+
+.cke_widget_wrapper > a {
+    display: inline-block
+}
+
+
+.container-body table, .container-body table > tr > td, .container-body table > tr > th, .container-body table > tbody > tr > td, .container-body table > tbody > tr > th, .container-body table > thead > tr > td, .container-body table > thead > tr > th, .container-body table > tfoot > tr > td, .container-body table > tfoot > tr > th {
+    border: #d3d3d3 1px dotted
+}
+
+.container-body table {
+    border-collapse: separate;
+}
+
+.container-body table td {
+    min-width: 60px;
+}
+
+
+.question-main table, .question-main table > tr > td, .question-main table > tr > th, .question-main table > tbody > tr > td, .question-main table > tbody > tr > th, .question-main table > thead > tr > td, .question-main table > thead > tr > th, .question-main table > tfoot > tr > td, .question-main table > tfoot > tr > th {
+    border: #d3d3d3 1px dotted
+}
+
+.question-main table {
+    border-collapse: separate;
+}
+
+.question-main table td {
+    min-width: 60px;
+}
+
+table, table > tr > td, table > tr > th, table > tbody > tr > td, table > tbody > tr > th, table > thead > tr > td, table > thead > tr > th, table > tfoot > tr > td, table > tfoot > tr > th {
+    border: #d3d3d3 1px dotted
+}
+
+table {
+    border-collapse: separate;
+}
+
+table td {
+    min-width: 60px;
+}
+
