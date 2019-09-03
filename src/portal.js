@@ -44,6 +44,8 @@ export function portalConfig(domain = "http://static.xiao5market.com", placeHold
     imgPlaceHolder = placeHolder?placeHolder:imgPlaceHolder;
 }
 
+portalConfig(window.Laravel.prefix || "");
+
 Object.keys(Mapping_role).forEach(role => {
     Mapping_role_reversed[Mapping_role[role]] = role;
 });

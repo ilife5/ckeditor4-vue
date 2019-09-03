@@ -5,9 +5,7 @@
 <script>
     import loadScript from 'load-script';
     import { debounce } from 'lodash-es';
-    import {editorToMarkdown, toHtml, toMarkdown, portalConfig, log} from '../portal';
-
-    portalConfig(window.Laravel.prefix);
+    import {editorToMarkdown, toHtml, toMarkdown, log} from '../portal';
 
     const INPUT_EVENT_DEBOUNCE_WAIT = 300;
     let promise;
@@ -134,18 +132,6 @@
                         },
                         span: {
                             styles: ['line-height', 'text-underline', 'transform']
-                        },
-
-                        table: {
-                            attributes: [ 'border', 'align', 'summary', 'cellspacing', 'cellpadding', 'style' ],
-                        },
-
-                        td: {
-                            attributes: ['colspan', 'rowspan']
-                        },
-
-                        th: {
-                            attributes: ['colspan', 'rowspan', 'scope']
                         },
                         $1: {
                             // Use the ability to specify elements as an object.
