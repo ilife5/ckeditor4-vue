@@ -177,8 +177,8 @@ var initSample = ( function() {
 
 		let editor;
 		const config = {
-			uploadUrl: "http://localhost:3000/api/upload",
-			filebrowserImageUploadUrl: "http://www.piyuedashi.com/uploader/uploadTestPapers"
+			//uploadUrl: "http://localhost:3000/api/upload",
+			//filebrowserImageUploadUrl: "http://www.piyuedashi.com/uploader/uploadTestPapers"
 		};
 		// Depending on the wysiwygarea plugin availability initialize classic or inline editor.
 		if ( wysiwygareaAvailable ) {

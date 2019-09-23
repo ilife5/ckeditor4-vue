@@ -118,7 +118,7 @@ uploaderConfig: {
         },
         data: function () {
 
-            let text = '%W%%E%_**<sub>微</sub>~~软~~<sup>雅</sup>~~黑   ![](http://static.xiao5market.com//test/6a941ba1-a695-11e9-91bf-f34b97ae33bd-1.png)~~**_%E% %W%  ^ ![](http://static.xiao5market.com//test/7d041bf1-a695-11e9-91bf-f34b97ae33bd-image-20190715081418-1.png) \\_\\_\\_\\_\\_\\_\\_\\_\\_\\_\\_\\_\\_\\_\\_\\_\\_\\_ ​​​​​​​\n' + 'abc';
+            let text = '%W%%E%_**<sub>微</sub>~~软~~<sup>雅</sup>~~黑   ![](http://static.xiao5market.com//test/6a941ba1-a695-11e9-91bf-f34b97ae33bd-1.png?_ts=1568195574603)~~**_%E% %W%  ^ ![](http://static.xiao5market.com//test/7d041bf1-a695-11e9-91bf-f34b97ae33bd-image-20190715081418-1.png) \\_\\_\\_\\_\\_\\_\\_\\_\\_\\_\\_\\_\\_\\_\\_\\_\\_\\_ ​​​​​​​\n' + 'abc';
 
             text = '<p><span data-role="wave"><span data-role="emphasize"><em><strong><sub>微</sub><del>软</del><u><sup>雅</sup><del>黑&nbsp; &nbsp;<img src="http://static.xiao5market.com//test/6a941ba1-a695-11e9-91bf-f34b97ae33bd-1.png" alt="" width="82" height="23" /></del></u></strong></em></span>&nbsp;</span>&nbsp;&nbsp;^&nbsp;<span style="line-height:3;"><img src="http://static.xiao5market.com//test/7d041bf1-a695-11e9-91bf-f34b97ae33bd-image-20190715081418-1.png" alt="" /></span>&nbsp;__________________&nbsp;<span style="line-height:4;">​​​​​​​</span></p>\n' +
                 '<p>abc</p>\n' +
@@ -131,10 +131,12 @@ uploaderConfig: {
                 '<p><span style="line-height:1;">设置行高</span></p>\n' +
                 '<p><span style="line-height:2;">嵌套设<span style="line-height:3;">置行</span>高</span></p>';
 
+            //text = '';
             return {
                 // 编辑器远程下载地址（将ckeditor_4.12.0_dev.zip解压到可访问目录）
                 config: {
                     editorRemoteUrl: "./ckeditor/ckeditor.js",
+                    //editorRemoteUrl: "http://localhost:63343/ckeditor-dev/ckeditor.js",
                     height: 400,
                   //  customerResponse: true,
                     notification_duration: 1000

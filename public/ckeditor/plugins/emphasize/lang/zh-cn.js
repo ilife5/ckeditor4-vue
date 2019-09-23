@@ -1,1 +1,0 @@
-﻿CKEDITOR.plugins.setLang("emphasize","zh-cn",{emphasize:"着重号"});

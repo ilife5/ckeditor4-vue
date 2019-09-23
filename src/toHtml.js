@@ -1,40 +1,12 @@
-import TurndownService from 'turndown';
-import showdown from 'showdown';
 
-const kityContainer = document.createElement('div');
-kityContainer.style.position = "absolute";
-kityContainer.style.top = "-99999px";
-kityContainer.style.visibility = "hidden";
-document.documentElement.appendChild(kityContainer);
-let kfe;
-
-const factory = window.kf.EditorFactory.create( kityContainer, {
-    render: {
-        fontsize: 24
-    },
-    resource: {
-        path: "http://static.xiao5market.com//kityformula/resource/"
-    }
-} );
-
-factory.ready( function () {
-
-    kfe = window.kfe = this;
-
-} );
-
-const turndownService = new TurndownService({
-    codeBlockStyle: 'fenced'
-});
-
-const Mapping_role = {
+var Mapping_role = {
     "emphasize": "E",
     "wave": "W"
 };
 
-const Mapping_role_reversed = {};
+var Mapping_role_reversed = {};
 
-const Mapping_class = {
+var Mapping_class = {
     "top_question": "C_TQ",
     "small_question": "C_SMQ",
     "sub_question": "C_SUQ",
@@ -45,9 +17,9 @@ const Mapping_class = {
     "question-score": "C_QS"
 };
 
-const Mapping_class_reversed = {};
+var Mapping_class_reversed = {};
 
-const render_class = {
+var render_class = {
     C_TQ: renderClassSpan,
     C_SMQ: renderClassSpan,
     C_SUQ: renderClassSpan,
@@ -67,18 +39,8 @@ function renderClassP(key, content) {
 }
 
 let ossPortal = "http://";
-let ossDomain = "static.xiao5market.com";
+let ossDomain = "pyds.oss-cn-beijing.aliyuncs.com";
 let imgPlaceHolder = "https://pyds.oss-cn-beijing.aliyuncs.com/uploads/question_img/2019-07-10/ca6752a2-3db8-4211-9d88-f53bc6070eef.png";
-
-export function portalConfig(domain = "http://static.xiao5market.com", placeHolder = "https://pyds.oss-cn-beijing.aliyuncs.com/uploads/question_img/2019-07-10/ca6752a2-3db8-4211-9d88-f53bc6070eef.png") {
-    domain.replace(/(https?:\/\/)(.+)/, function($, $1,$2) {
-        ossPortal = $1;
-        ossDomain = $2;
-    });
-    imgPlaceHolder = placeHolder?placeHolder:imgPlaceHolder;
-}
-
-portalConfig(window.Laravel.prefix || "");
 
 Object.keys(Mapping_role).forEach(role => {
     Mapping_role_reversed[Mapping_role[role]] = role;
@@ -107,12 +69,6 @@ function getClassKey(role) {
 /**
  * config showndown instance
  */
-/**
- * Process Markdown `<pre><code>` blocks.
- */
-showdown.subParser('codeBlocks', function (text) {
-    return text;
-});
 showdown.setFlavor('github');
 showdown.extension('dataRole', function() {
     'use strict';
@@ -144,7 +100,7 @@ showdown.extension('dataRole', function() {
     };
 });
 
-const inlineRegExp      = /!\[([^\]]*?)][ \t]*()\([ \t]?<?([\S]+?(?:\([\S]*?\)[\S]*?)?)>?(?: =([*\d]+[A-Za-z%]{0,4})?x([*\d]+[A-Za-z%]{0,4})?)?[ \t]*(?:(["'])([^"]*?)\6)?[ \t]?\)({:[^}]*})?/g,
+var inlineRegExp      = /!\[([^\]]*?)][ \t]*()\([ \t]?<?([\S]+?(?:\([\S]*?\)[\S]*?)?)>?(?: =([*\d]+[A-Za-z%]{0,4})?x([*\d]+[A-Za-z%]{0,4})?)?[ \t]*(?:(["'])([^"]*?)\6)?[ \t]?\)({:[^}]*})?/g,
     crazyRegExp       = /!\[([^\]]*?)][ \t]*()\([ \t]?<([^>]*)>(?: =([*\d]+[A-Za-z%]{0,4})?x([*\d]+[A-Za-z%]{0,4})?)?[ \t]*(?:(?:(["'])([^"]*?)\6))?[ \t]?\)({:[^}]*})?/g,
     base64RegExp      = /!\[([^\]]*?)][ \t]*()\([ \t]?<?(data:.+?\/.+?;base64,[A-Za-z0-9+/=\n]+?)>?(?: =([*\d]+[A-Za-z%]{0,4})x([*\d]+[A-Za-z%]{0,4}))?[ \t]*(?:(["'])([^"]*?)\6)?[ \t]?\)({:[^}]*})?/g,
     referenceRegExp   = /!\[([^\]]*?)] ?(?:\n *)?\[([\s\S]*?)]()()()()()({:[^}]*})?/g,
@@ -277,172 +233,14 @@ function imageTolatex (text) {
     return text;
 }
 
-/**
- * config turndownService
- */
+var converter = new showdown.Converter({ extensions: ['dataRole', 'images'] });
 
-turndownService.addRule('strikethrough', {
-    filter: ['del', 's', 'strike'],
-    replacement: function (content) {
-        return '~~' + content + '~~'
-    }
-});
-
-turndownService.addRule('sub', {
-    filter: ['sub'],
-    replacement: function (content) {
-        return '<sub>' + content + '</sub>'
-    }
-});
-
-turndownService.addRule('u', {
-    filter: ['u'],
-    replacement: function (content) {
-        return '<u>' + content.replace(/\s/g, '\\_') + '</u>'
-    }
-});
-
-turndownService.addRule('sup', {
-    filter: ['sup'],
-    replacement: function (content) {
-        return '<sup>' + content + '</sup>'
-    }
-});
-
-turndownService.addRule('table', {
-    filter: ['table'],
-    replacement: function (content, node) {
-        return node.outerHTML;
-    }
-});
-
-turndownService.addRule('dataRole', {
-    filter: ['span', 'p'],
-    replacement: function (content, el) {
-        const key = getKey(el.getAttribute('data-role'));
-        const cln = el.className;
-        const classKeys = Object.keys(Mapping_class);
-        const cll = Array.prototype.slice.call(el.classList).filter(element => classKeys.includes(element));
-        const latex = el.getAttribute('data-latex');
-        const style = el.style;
-        const lineHeight = style.lineHeight;
-
-        if(cln.indexOf('mathquill-rendered-math') > -1 && latex) {
-            return toLatex(latex);
-            //return el.outerHTML;
-        } else if(cll.length > 0){
-            const classKey = getClassKey(cll[0]);
-            return `%${classKey}%${content}%${classKey}%`;
-        } else if(key) {
-            return `%${key}%${content}%${key}%`;
-        } else if(lineHeight) {
-            return `%lh(${lineHeight})%${content}%lh%`;
-        } else if(el.tagName === 'P') {
-            return '\n\n' + content + '\n\n';
-        } else {
-            return content;
-        }
-
-    }
-});
-
-turndownService.addRule('image', {
-    filter: ['img'],
-    replacement: function (content, node) {
-        const title = node.getAttribute('title');
-        const latex = node.getAttribute('data-latex');
-        const style = node.style;
-        const parentStyle = node.parentNode.style;
-        const float = style.float || parentStyle.float || "";
-
-        if(title === '点击并拖拽以移动') {
-            return content;
-        } else {
-            const alt = node.alt || '';
-            let src = node.getAttribute('src') || '';
-            const titlePart = title ? ' "' + title + '"' : '';
-            const width = node.width || "";
-            const height = node.height || "";
-            let attrs = '';
-
-            src = src.replace(/(https?:\/\/([^/]+))\/(.+)/, function(m, $1, $2, $3) {
-                //本站图片
-                if($2 === ossDomain) {
-                    return `/${$3}`;
-                } else {
-                    //外站图片
-                    return imgPlaceHolder;
-                }
-            });
-
-            if(float) {
-                attrs += ` style="float: ${float};"`;
-            }
-
-            if(latex) {
-                attrs += ` data-latex=${encodeURIComponent(latex)}`;
-            }
-
-            return src ? ('![' + alt + ']' + '(' + src + ( (width || height)?` =${width}x${height}`:'') + titlePart + ')' + (attrs?`{:${attrs}}`:'')) : '';
-        }
-    }
-});
-
-function toLatex(content) {
-    return `$$${encodeURIComponent(content)}$$`;
+if(!window.pyUtils) {
+    window.pyUtils = {};
 }
 
-const converter = new showdown.Converter({ extensions: ['dataRole', 'images'] });
-
-export function toHtml(markdown) {
+function toHtml(markdown) {
     return converter.makeHtml(markdown);
 }
 
-export function toMarkdown(html) {
-    return turndownService.turndown(html);
-}
-
-function latexToImage(md, callback) {
-    const match = md.match(/\$\$\n?(.*?)\n?\$\$/);
-    if(match) {
-        try {
-            kfe.execCommand( "render", decodeURIComponent(match[1]));
-            try{
-                kfe.execCommand( "focus" );
-            } catch (e) {
-                //TODO log errors;
-            }
-            kfe.execCommand("get.image.data", function(data) {
-                latexToImage(md.replace(/\$\$\n?(.*?)\n?\$\$/, `<img class="kfformula" src="${data.img}" data-latex="${decodeURIComponent(match[1])}" />`), callback);
-            });
-
-        } catch (e) {
-            callback(md);
-        }
-
-    } else {
-        callback(md);
-    }
-}
-
-export function editorToMarkdown(value, callback) {
-
-    factory.ready(() => {
-        // 如果原值为html，先转化为markdown
-        if(value.match(/<p>/) || value.match(/<span>/)) {
-            value = toMarkdown(value);
-        }
-
-        //将含有latex表达式的图片转化为base64
-        latexToImage(value, callback)
-    });
-
-}
-
-export function markdownToServer(md) {
-    return imageTolatex(md);
-}
-
-export function log(markdown, html) {
-    //console.log(markdown, html);
-}
+window.pyUtils.toHtml = toHtml;

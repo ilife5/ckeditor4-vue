@@ -66,7 +66,8 @@
         mathTypeRemoteSrc: "https://pyds.oss-cn-beijing.aliyuncs.com/uploads/question_img/2019-07-10/ca6752a2-3db8-4211-9d88-f53bc6070eef.png",
         language: "zh-cn",
 
-        ossLink: "http://static.xiao5market.com"
+        ossLink: "http://static.xiao5market.com",
+        customConfig: ''
     };
 
     export default {
@@ -127,11 +128,12 @@
                 const conf = {
                     allowedContent: {
                         img: {
-                            attributes: [ '!src', 'alt', 'width', 'height', 'title' ],
+                            attributes: [ '!src', 'alt', 'width', 'height', 'title', 'crossDomain' ],
                             styles: ['vertical-align', 'float']
                         },
                         span: {
-                            styles: ['line-height', 'text-underline', 'transform']
+                            styles: ['line-height', 'text-underline', 'transform'],
+                            classes: true
                         },
                         $1: {
                             // Use the ability to specify elements as an object.
@@ -265,9 +267,9 @@
                     });
 
                     // 多加一行方便选中，需要判断是否粘贴的为file（判断dataValue的长度是否大于0）
-                    if(evt.data.dataValue.length > 0) {
+                    /*if(evt.data.dataValue.length > 0) {
                         evt.data.dataValue += '<p><span>&nbsp;</span></p>';
-                    }
+                    }*/
 
                 });
 
@@ -341,6 +343,9 @@
 
                 if(this.format === 'md') {
                     if ( newValue !== oldValue && newValue !== this.$_lastEditorData ) {
+                        newValue = newValue.replace(/<u>(.*)?<\/u>/g, function(content, $1) {
+                            return `<u>${$1.replace(/\s/g, '\\_')}</u>`;
+                        });
                         this.editor.setData( toHtml(newValue) );
                     }
                 } else {
