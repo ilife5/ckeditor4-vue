@@ -343,9 +343,6 @@
 
                 if(this.format === 'md') {
                     if ( newValue !== oldValue && newValue !== this.$_lastEditorData ) {
-                        newValue = newValue.replace(/<u>(.*)?<\/u>/g, function(content, $1) {
-                            return `<u>${$1.replace(/\s/g, '\\_')}</u>`;
-                        });
                         this.editor.setData( toHtml(newValue) );
                     }
                 } else {

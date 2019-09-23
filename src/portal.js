@@ -24,7 +24,14 @@ factory.ready( function () {
 } );
 
 const turndownService = new TurndownService({
-    codeBlockStyle: 'fenced'
+    codeBlockStyle: 'fenced',
+    blankReplacement: function(content, node) {
+        if(node.tagName === 'U') {
+            return node.outerHTML;
+        }
+
+        return node.isBlock ? '\n\n' : '';
+    }
 });
 
 const Mapping_role = {
@@ -298,7 +305,7 @@ turndownService.addRule('sub', {
 turndownService.addRule('u', {
     filter: ['u'],
     replacement: function (content) {
-        return '<u>' + content.replace(/\s/g, '\\_') + '</u>'
+        return '<u>' + content + '</u>'
     }
 });
 
@@ -399,6 +406,7 @@ export function toHtml(markdown) {
 }
 
 export function toMarkdown(html) {
+    html = html.replace(/^_+/mg, function(content) {return '<u>' + content + '</u>';});
     return turndownService.turndown(html);
 }
 

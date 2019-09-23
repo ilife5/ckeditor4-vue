@@ -94,11 +94,9 @@
 
 `;
 
-            text = '<u>1     3  </u>解：S阴=S大半圆+S小半圆-S三\n' +
-                '\n' +
-                '$$%5Cfrac%7B1%7D%7B2%7D%5Ctext%7B%CF%80%7D%5Ctimes%5Cleft(%5Cfrac%7B4%7D%7B2%7D%5Cright)%5E2%2B%5Cfrac%7B1%7D%7B2%7D%5Ctext%7B%CF%80%7D%5Ctimes%5Cleft(%5Cfrac%7B2%7D%7B2%7D%5Cright)%5E2-4%5Ctimes2%5Cdiv2$$\n' +
-                '\n' +
-                '\\=2.5π-4\\=3.85（cm<sup>2</sup>）';
+            text = '<u>  </u>' + '<u>1     3  </u>\n' +
+                '1________' +
+                '______';
 
             /*text = '            \n' +
                 '%W%%E%_**<sub>微</sub>~~软~~<u><sup>雅</sup>~~黑   ![](//test/6a941ba1-a695-11e9-91bf-f34b97ae33bd-1.png =82x23)~~</u>**_%E% %W%  ^ %lh(3)%![](//test/7d041bf1-a695-11e9-91bf-f34b97ae33bd-image-20190715081418-1.png)%lh% \\_\\_\\_\\_\\_\\_\\_\\_\\_\\_\\_\\_\\_\\_\\_\\_\\_\\_ \n' +
